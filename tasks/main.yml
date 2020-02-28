@@ -1,1 +1,44 @@
 ---
+- name: ensure dependencies are installed
+  apt: name={{ item }}
+       state=installed
+  sudo: yes
+  with_items:
+    - unzip
+  tags: piwigo
+
+- name: ensure the piwigo_webserver_user user belongs to the piwigo_user group
+  user: name={{ piwigo_webserver_user }}
+        groups={{ piwigo_user }}
+        append=yes
+  sudo: yes
+  tags: piwigo
+
+- name: ensure the install dir is available
+  file: path={{ piwigo_install_dir }}
+        state=directory
+        owner={{ piwigo_user }} group={{ piwigo_user }} mode=755
+  sudo: yes
+  tags: piwigo
+
+- name: download the bundle to the temporary location
+  get_url: url={{ piwigo_bundle_url }}
+           dest=/tmp/{{ piwigo_bundle_file }}
+  tags: piwigo
+
+- name: unpack the bundle
+  command: unzip /tmp/{{ piwigo_bundle_file }}
+           chdir={{ piwigo_install_dir }}
+           creates={{ piwigo_install_dir }}/piwigo/index.php
+  tags: piwigo
+
+- name: ensure the install dir has correct permissions
+  file: path={{ piwigo_install_dir }}/piwigo
+        state=directory recurse=yes
+        owner={{ piwigo_user }} group={{ piwigo_user }} mode=774
+  sudo: yes
+  tags: piwigo
+
+- include: apache.yml
+  when: piwigo_webserver_daemon == 'apache2' or piwigo_webserver_daemon == 'httpd'
+  tags: piwigo

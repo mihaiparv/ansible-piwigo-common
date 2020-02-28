@@ -1,1 +1,8 @@
 ---
+piwigo_version: '2.7.0beta2'
+piwigo_install_dir: '/opt'
+piwigo_webserver_daemon: 'apache2'
+piwigo_webserver_user: 'www-data'
+piwigo_webserver_listen_port: '80'
+piwigo_webserver_root_dir: '/var/www'
+piwigo_webserver_context: 'piwigo'

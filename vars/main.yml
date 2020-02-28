@@ -1,1 +1,4 @@
 ---
+piwigo_webserver_dir: "{{ piwigo_webserver_root_dir~'/'~piwigo_webserver_context if piwigo_webserver_context is defined else piwigo_webserver_root_dir }}"
+piwigo_bundle_url: 'http://piwigo.org/download/dlcounter.php?code={{ piwigo_version }}'
+piwigo_bundle_file: 'piwigo-{{ piwigo_version }}.zip'
